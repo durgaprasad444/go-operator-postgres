@@ -198,13 +198,30 @@ func newPodForCR(cr *appv1alpha1.Postgres) *corev1.Pod {
                 Labels:       labels,
             },
             Spec: corev1.PodSpec{
-                Containers: []corev1.Container{
-                    {
-                        Name:    "busybox",
-                        Image:   "busybox",
-                        Command: []string{"sleep", "3600"},
-                    },
-                },
-            },
-        }
-    }
+			Containers: []corev1.Container{
+				{
+					Name:    "postgres",
+					Image:   "bitnami/postgresql:11.7.0-debian-10-r9",
+					Ports: []corev1.ContainerPort{{
+						ContainerPort: 5432,
+						Name: "postgres",
+					}},
+					Env: []corev1.EnvVar{
+						{
+							Name: "POSTGRES_DB",
+							Value: "wiki",
+						},
+						{
+							Name: "POSTGRES_USER",
+							Value: "postgres",
+						},
+						{
+							Name: "POSTGRES_PASSWORD",
+							Value: "password",
+						},
+					},
+				},
+			},
+		},
+	}
+}
